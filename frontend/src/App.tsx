@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import apiClient from "./api/axios";
+import axios from "axios";
 
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -14,8 +15,22 @@ function App() {
       const response = await apiClient.get<{ message: string }>("/api/message");
 
       setMessage(response.data.message);
-    } catch {
-      setError("Something went wrong.");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.status === 404) {
+          setError('Message item not found');
+        }
+
+        if (err.status === 503) {
+          setError("Service unavailale.");
+        }
+
+        if (err.status === 500) {
+          setError("Something went wrong.");
+        }
+      } else {
+        setError("Something went wrong.");
+      }
     } finally {
       setIsLoading(false);
     }

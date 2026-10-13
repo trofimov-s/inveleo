@@ -1,0 +1,5 @@
+export enum EnvKeys {
+  PORT = 'PORT',
+  DATABASE_URL = 'DATABASE_URL',
+  FRONTEND_URL = 'FRONTEND_URL',
+}

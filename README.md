@@ -8,7 +8,7 @@ The planned product lets each professional manage a profile, services, availabil
 
 - **Frontend:** React, TypeScript, Vite, Axios.
 - **Backend:** NestJS, TypeScript, Express.
-- **Planned persistence:** PostgreSQL with Prisma.
+- **Persistence:** PostgreSQL on Neon with Prisma ORM 7.
 - **Planned hosting:** Render for the frontend and API, Neon for PostgreSQL.
 
 ## Project structure
@@ -23,6 +23,10 @@ Each application has its own `package.json` and `package-lock.json`.
 ## Local development
 
 Prerequisites: Node.js 24 and npm. The local environment used during development is Node.js 24.15.0 with npm 11.12.1.
+
+Create a local `backend/.env` using `backend/.env.example` as a starting point. Configure `DATABASE_URL` for PostgreSQL and `FRONTEND_URL` for the browser application. `PORT` defaults to 3000. NestJS ConfigModule and Joi load and validate these settings.
+
+Apply the database migrations and run the seed script to populate the initial message before testing the successful loading scenario.
 
 From the project root, start the backend in one terminal:
 
@@ -46,11 +50,12 @@ The current frontend configuration uses `http://localhost:3000` as its API base 
 
 ## API
 
-`GET /api/message` returns HTTP 200 with a JSON object:
+`GET /api/message` reads the record with ID 1 from PostgreSQL and returns HTTP 200 with a JSON object, for example:
 
 ```json
 {
-  "message": "Hello World!"
+  "id": 1,
+  "message": "Example message from PostgreSQL"
 }
 ```
 
