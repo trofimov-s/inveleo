@@ -17,20 +17,29 @@ function App() {
       setMessage(response.data.message);
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        if (err.status === 404) {
-          setError('Message item not found');
+        if (err.status) {
+          switch (err.status) {
+            case 404:
+              setError("Message item not found");
+              break;
+
+            case 503:
+              setError("Service unavailale.");
+              break;
+
+            default:
+              setError("Something went wrong.");
+          }
+
+          return;
         }
 
-        if (err.status === 503) {
-          setError("Service unavailale.");
-        }
-
-        if (err.status === 500) {
-          setError("Something went wrong.");
-        }
-      } else {
         setError("Something went wrong.");
+
+        return;
       }
+
+      setError("Something went wrong.");
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +56,9 @@ function App() {
       {isLoading && <p>Загрузка…</p>}
       {!isLoading && error && <p>{error}</p>}
       {!isLoading && !error && message && <p>{message}</p>}
-      <button onClick={getMessage} disabled={isLoading}>Reload</button>
+      <button onClick={getMessage} disabled={isLoading}>
+        Reload
+      </button>
     </>
   );
 }
